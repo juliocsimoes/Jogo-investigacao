@@ -3,7 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-</head>
+<style id="immersive-map-style">
+#nycPaperOverlay{position:absolute;inset:0;z-index:15;display:grid;place-items:center;pointer-events:auto;background:linear-gradient(180deg,#070a1055,#070a10aa);opacity:0;transition:opacity .38s ease;overflow:hidden}
+#nycPaperOverlay[hidden]{display:none!important}
+#nycPaperOverlay.open{opacity:1}
+#nycPaperOverlay .paper{position:relative;width:84%;height:82%;transform:translateY(115%) rotate(-9deg) scale(.8);transition:transform .7s cubic-bezier(.2,.8,.2,1);background:#b6a07b;box-shadow:0 17px 55px #000b,0 0 0 2px #54452f, inset 0 0 60px #62432788;clip-path:polygon(0 2%,16% 0,31% 1%,48% 0,66% 1%,82% 0,100% 2%,99% 99%,83% 100%,64% 99%,48% 100%,32% 99%,16% 100%,0 98%);display:grid;grid-template-columns:19% 1fr 21%;padding:1.6%;gap:1%;font-family:Georgia,serif;color:#382a1d}
+#nycPaperOverlay.open .paper{transform:translateY(0) rotate(-1deg) scale(1)}
+#nycPaperOverlay .paper:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 32.8%,#533e2430 33%,#fff4d622 33.4%,transparent 33.7%,transparent 66%,#4d382a2d 66.3%,#f7dcb722 66.6%,transparent 67%),radial-gradient(ellipse,#fff6d00a 30%,#2b1b1238 100%);mix-blend-mode:multiply}
+#nycPaperOverlay .map-side{border:1px solid #806b4a;padding:8% 6%;background:#d5bf96a8;overflow:auto;font-size:clamp(7px,1vw,14px)}
+#nycPaperOverlay .map-side h3{font-size:clamp(10px,1.5vw,22px);margin:0 0 8px;text-align:center}
+#nycPaperOverlay .map-side p{margin:4px 0;line-height:1.4}
+#nycPaperOverlay .map-side button{display:block;border:0;border-bottom:1px dashed #856b4b;background:none;color:#33291c;text-align:left;width:100%;padding:5px 1px;cursor:pointer;font:inherit}
+#nycPaperOverlay .map-side button:hover{background:#e8d4a7}
+#nycPaperOverlay .map-art{position:relative;overflow:hidden;border:1px solid #796547;background:#9aab9f}
+#nycPaperOverlay .map-art svg{width:100%;height:100%;display:block}
+#nycPaperOverlay .map-pin{position:absolute;transform:translate(-50%,-50%);width:clamp(15px,2.4vw,33px);height:clamp(15px,2.4vw,33px);border:2px solid #e9d7ad;border-radius:50%;background:#303832;color:#fff3cd;box-shadow:0 2px 5px #0007;cursor:pointer;font:bold clamp(10px,1.4vw,19px) Georgia;display:grid;place-items:center;padding:0}
+#nycPaperOverlay .map-pin.mystery{background:#6b4c3b}
+#nycPaperOverlay .map-pin.chosen{background:#a65e32;outline:2px solid #fff2c6}
+#nycPaperOverlay .map-hand{position:absolute;bottom:-11%;width:20%;height:32%;background:linear-gradient(125deg,#5c3424,#aa7755 40%,#b6855f 58%,#613a2c);border:3px solid #503526;border-radius:55% 40% 15% 20%;box-shadow:inset -8px -10px 20px #3b211e99,0 9px 22px #000a;pointer-events:none;z-index:3}
+#nycPaperOverlay .map-hand.left{left:0;transform:rotate(-25deg)}
+#nycPaperOverlay .map-hand.right{right:0;transform:rotate(25deg)}
+#nycPaperOverlay .map-control{position:absolute;bottom:1%;left:50%;transform:translateX(-50%);z-index:4;display:flex;gap:10px;align-items:center;background:#12181cde;padding:5px 10px;color:#f3e1b6;font:clamp(9px,1vw,13px) monospace;white-space:nowrap}
+#nycPaperOverlay .map-control button{background:#e0cba0;border:0;color:#28261e;padding:5px 10px;cursor:pointer;font:inherit}
+#nycPaperOverlay .map-detail{position:absolute;left:23%;right:23%;bottom:8%;z-index:2;background:#dfc99eea;border:1px solid #695337;padding:8px 12px;box-shadow:2px 3px 0 #57452a77;font:clamp(9px,1.05vw,14px) Georgia}
+#nycPaperOverlay .map-detail strong{display:block;font-size:1.15em}
+#nycPaperOverlay .map-detail small{display:block;margin-top:3px}
+@media(max-width:650px){#nycPaperOverlay .paper{width:97%;height:80%;grid-template-columns:19% 1fr 19%;padding:1%;gap:.5%}#nycPaperOverlay .map-side{padding:4% 2%}#nycPaperOverlay .map-detail{left:21%;right:21%;bottom:4%;padding:3px 5px}#nycPaperOverlay .map-control{bottom:0;padding:3px 6px;gap:5px}#nycPaperOverlay .map-control button{padding:4px 6px}}
+@media(prefers-reduced-motion:reduce){#nycPaperOverlay,#nycPaperOverlay .paper{transition:none}}
+</style></head>
 <body style="margin:0">
 <title>Sala dos Detetives</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -583,7 +610,48 @@ $('travelYes').onclick=async()=>{
  ],()=>{inv.hidden=true;invOpen=false;invBusy=false;stage.classList.remove('inv-open');invBtn.setAttribute('aria-expanded','false');carScene.hidden=false;stage.classList.add('in-car')});
  travelling=false;$('carMap').focus({preventScroll:true});
 };
-$('carMap').onclick=()=>{const n=$('carNote');n.hidden=false;if(AC&&sfxOn&&SND.rustle)SND.rustle();clearTimeout(carNoteTimer);carNoteTimer=setTimeout(()=>n.hidden=true,3500)};
+
+/* MAPA IMERSIVO 1992 */
+const mapLocations=[
+['7.ª Esquadra','★',48,74,'Delegacia de polícia · Ponto de partida','known'],
+['Casa do investigador','⌂',42,55,'Residência de J. Simões · Cenário em preparação','known'],
+['Café Midnight','☕',57,59,'Café aberto até tarde · Cenário em preparação','known'],
+['Lanchonete Riverside','D',35,47,'Lanchonete de bairro · Cenário em preparação','known'],
+['Supermercado Broadway','S',58,40,'Compras e movimento noturno · Cenário em preparação','known'],
+['Central Park','♣',48,19,'Grande parque de Manhattan · Cenário em preparação','known'],
+['Washington Square','♣',46,62,'Parque e praça · Cenário em preparação','known'],
+['Battery Park','♣',57,90,'Parque junto ao porto · Cenário em preparação','known'],
+['Hospital Bellevue','✚',69,51,'Hospital e arquivos médicos · Cenário em preparação','known'],
+['Biblioteca Pública','B',61,36,'Jornais e registos antigos · Cenário em preparação','known'],
+['Estação de metro','M',53,46,'Transportes subterrâneos · Cenário em preparação','known'],
+['Mercearia Hudson','S',27,68,'Comércio local · Cenário em preparação','known'],
+['Cais desconhecido','?',76,82,'Ponto de interesse por descobrir','mystery'],
+['Armazém sem nome','?',64,78,'Morada incompleta · Requer investigação','mystery'],
+['Beco misterioso','?',58,72,'Uma marcação feita à mão · Requer investigação','mystery'],
+['Hotel desconhecido','?',27,26,'Um endereço riscado · Requer investigação','mystery'],
+['Passagem fechada','?',65,22,'Entrada sem identificação · Requer investigação','mystery'],
+['Garagem subterrânea','?',31,75,'Localização por confirmar','mystery'],
+['Oficina','?',83,58,'Possível testemunha · Por descobrir','mystery'],
+['Clube noturno','?',80,38,'Informação insuficiente · Por descobrir','mystery']
+];
+function openPaperMap(){
+let overlay=$('nycPaperOverlay');
+if(!overlay){
+overlay=document.createElement('div');overlay.id='nycPaperOverlay';overlay.hidden=true;overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Mapa de Nova Iorque 1992');
+overlay.innerHTML='<div class="paper"><aside class="map-side"><h3>NEW YORK CITY<br>1992</h3><p>MAPA DE SERVIÇO</p><hr><p>★ Delegacia</p><p>⌂ Residência</p><p>☕ Café</p><p>D Alimentação</p><p>S Compras</p><p>✚ Saúde</p><p>♣ Parques</p><p>? Por descobrir</p></aside><div class="map-art"><svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-label="Mapa de Manhattan, Bronx, Queens e Brooklyn"><defs><pattern id="nycGrid" width="22" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-13)"><rect width="22" height="18" fill="#ba9e78"/><path d="M0 0H22M0 0V18" stroke="#e0c7a0" stroke-width="4"/><path d="M10 3V15" stroke="#7b6249" stroke-width=".6"/></pattern></defs><rect width="600" height="800" fill="#859a9a"/><path d="M150 0L375 0Q390 150 350 310Q300 510 395 800L115 800Q160 540 135 360Q95 150 150 0Z" fill="url(#nycGrid)" stroke="#5d7373" stroke-width="8"/><path d="M410 0H600V800H455Q420 610 430 430Q475 260 410 0" fill="url(#nycGrid)" stroke="#5d7373" stroke-width="8"/><path d="M195 0Q230 260 200 400T260 800M240 0Q275 250 260 450T305 800M290 0Q310 260 305 470T350 800" fill="none" stroke="#e2caa7" stroke-width="9"/><path d="M130 160L380 145M115 270L365 255M110 380L345 365M120 500L355 480M135 620L385 600M155 725L420 705M300 315L520 290M320 550L540 535" fill="none" stroke="#e2caa7" stroke-width="8"/><path d="M200 70L330 60L300 220L190 240Z" fill="#8a9870" stroke="#647a63" stroke-width="4"/><path d="M220 440L285 420L280 455L220 475Z" fill="#8a9870"/><text x="210" y="40" fill="#40392e" font-size="21" font-family="Georgia">MANHATTAN</text><text x="448" y="115" fill="#40392e" font-size="21" font-family="Georgia">BRONX</text><text x="450" y="380" fill="#40392e" font-size="23" font-family="Georgia">QUEENS</text><text x="430" y="680" fill="#40392e" font-size="21" font-family="Georgia">BROOKLYN</text><text x="65" y="470" fill="#dbe2da" font-size="19" font-family="Georgia" transform="rotate(-90 65 470)">HUDSON RIVER</text></svg><div id="nycMapPins"></div></div><aside class="map-side"><h3>NOTAS DO<br>DETECTIVE</h3><p>Possíveis localizações:</p><p>— Armazém?</p><p>— Cais?</p><p>— Oficina?</p><p>— Clube?</p><p>— ???</p><hr><p>«Há sempre alguma coisa escondida nesta cidade.»</p></aside><div class="map-detail" id="nycMapDetail"><strong>7.ª Esquadra</strong><small>Localização atual · Escolhe um marcador para investigar.</small></div><div class="map-hand left"></div><div class="map-hand right"></div></div><div class="map-control"><span>TOCAR: SELECIONAR</span><button type="button" id="nycMapClose">✕ FECHAR MAPA</button></div>';
+carScene.appendChild(overlay);
+const pins=overlay.querySelector('#nycMapPins');
+mapLocations.forEach((p,i)=>{let btn=document.createElement('button');btn.className='map-pin'+(p[5]==='mystery'?' mystery':'');btn.textContent=p[1];btn.title=p[0];btn.setAttribute('aria-label',p[0]);btn.style.left=p[2]+'%';btn.style.top=p[3]+'%';btn.onclick=()=>{pins.querySelectorAll('button').forEach(b=>b.classList.remove('chosen'));btn.classList.add('chosen');overlay.querySelector('#nycMapDetail').innerHTML='';let title=document.createElement('strong');title.textContent=p[0];let desc=document.createElement('small');desc.textContent=p[4];overlay.querySelector('#nycMapDetail').append(title,desc);if(AC&&sfxOn&&SND.rustle)SND.rustle()};pins.append(btn)});
+overlay.querySelector('#nycMapClose').onclick=closePaperMap;
+}
+overlay.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>overlay.classList.add('open')));
+if(AC&&sfxOn&&SND.rustle)SND.rustle();
+setTimeout(()=>{const close=overlay.querySelector('#nycMapClose');if(!overlay.hidden)close.focus({preventScroll:true})},430);
+}
+function closePaperMap(){const overlay=$('nycPaperOverlay');if(!overlay||overlay.hidden)return;overlay.classList.remove('open');if(AC&&sfxOn&&SND.rustle)SND.rustle();setTimeout(()=>{if(!overlay.classList.contains('open'))overlay.hidden=true},400);$('carMap').focus({preventScroll:true})}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('nycPaperOverlay')&&!$('nycPaperOverlay').hidden){e.preventDefault();closePaperMap()}});
+$('carMap').onclick=openPaperMap;
+
 $('carExit').onclick=async()=>{if(travelling)return;travelling=true;await blackTransition([
  {text:'Desliga o rádio e abre a porta.',ms:900,sound:carDoorSound},
  {text:'Regressa à esquadra.',ms:950,sound:footsteps}
