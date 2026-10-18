@@ -148,6 +148,12 @@ body{font-family:var(--f-ui);font-size:16px;line-height:1.4;
 .map-immersive .map-close{top:3%!important;right:3%!important}
 .map-immersive .map-info{bottom:12%!important;left:32%!important;right:32%!important}
 @media(max-width:600px){.map-immersive .map-info{left:10%!important;right:10%!important;bottom:19%!important}}
+
+/* Marcadores recalibrados à arte 1672x941: alvo generoso, aro preciso. */
+.map-immersive .map-marker{width:5.4%!important;aspect-ratio:1!important;min-width:0!important;min-height:0!important;border:0!important;background:transparent!important;box-shadow:none!important;outline:none!important;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.map-immersive .map-marker::after{content:"";position:absolute;left:50%;top:50%;width:59%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:2px solid transparent;box-sizing:border-box;pointer-events:none;transition:border-color .14s,box-shadow .14s,background .14s}
+.map-immersive .map-marker:hover::after,.map-immersive .map-marker:focus-visible::after,.map-immersive .map-marker.active::after{border-color:#ffe6a4;background:#ffcf6420;box-shadow:0 0 0 2px #21180cc0,0 0 12px #e6a34eaa}
+@media(max-width:650px){.map-immersive .map-marker{width:7.2%!important}.map-immersive .map-marker::after{width:45%}}
 </style>
 
 <div class="wrap">
@@ -618,24 +624,24 @@ $('travelYes').onclick=async()=>{
 };
 const mapOverlay=$('mapImmersive');
 const mapPoints=[
- ['Central Park',44.3,32.4,'Parque da cidade. Um local para futuras investigações.'],
- ['Casa do investigador',48.1,46.8,'Apartamento do investigador. Cenário em preparação.'],
- ['7.ª Esquadra',44.3,55.8,'Local atual: a tua base de operações.'],
- ['Hospital Bellevue',41.9,51.5,'Hospital e arquivos médicos. Cenário em preparação.'],
- ['Café Midnight',48.1,64.0,'Café de bairro. Cenário em preparação.'],
- ['Lanchonete Riverside',38.2,54.0,'Lanchonete de bairro. Cenário em preparação.'],
- ['Supermercado',51.5,54.1,'Comércio local. Cenário em preparação.'],
- ['Mercado de bairro',46.0,60.2,'Mercearia de bairro. Cenário em preparação.'],
- ['Biblioteca',49.5,36.9,'Biblioteca e arquivos. Cenário em preparação.'],
- ['Parque Riverside',37.5,69.0,'Parque junto ao rio. Cenário em preparação.'],
- ['Parque de Brooklyn',41.0,88.0,'Parque em Brooklyn. Cenário em preparação.'],
- ['Armazém desconhecido',65.1,47.0,'? Um endereço ainda por descobrir.'],
- ['Cais desconhecido',73.7,57.3,'? Um cais marcado à mão.'],
- ['Edifício desconhecido',57.0,30.0,'? Uma pista poderá revelar este local.'],
- ['Beco misterioso',48.1,72.3,'? Uma marcação sem nome.'],
- ['Oficina desconhecida',66.4,69.4,'? A localização ainda não foi identificada.'],
- ['Clube desconhecido',75.5,78.0,'? Um possível ponto de interesse.'],
- ['Local por descobrir',66.0,84.5,'? Informação insuficiente.']
+ ["Central Park", 45.0, 32.86, "Parque da cidade. Um local para futuras investigações."],
+ ["Casa do investigador", 48.8, 47.42, "Apartamento do investigador. Cenário em preparação."],
+ ["7.ª Esquadra", 44.8, 56.48, "Local atual: a tua base de operações."],
+ ["Hospital Bellevue", 42.4, 52.22, "Hospital e arquivos médicos. Cenário em preparação."],
+ ["Café Midnight", 46.6, 61.63, "Café de bairro. Cenário em preparação."],
+ ["Lanchonete Riverside", 38.8, 58.97, "Lanchonete de bairro. Cenário em preparação."],
+ ["Supermercado", 42.6, 70.16, "Comércio local. Cenário em preparação."],
+ ["Mercado de bairro", 52.2, 54.35, "Mercearia de bairro. Cenário em preparação."],
+ ["Biblioteca", 46.8, 43.87, "Biblioteca e arquivos. Cenário em preparação."],
+ ["Parque Riverside", 38.2, 66.79, "Parque junto ao rio. Cenário em preparação."],
+ ["Parque de Brooklyn", 41.4, 86.32, "Parque em Brooklyn. Cenário em preparação."],
+ ["Armazém desconhecido", 65.9, 47.78, "? Um endereço ainda por descobrir."],
+ ["Cais desconhecido", 74.8, 55.6, "? Um cais marcado à mão."],
+ ["Edifício desconhecido", 48.8, 73.18, "? Uma pista poderá revelar este local."],
+ ["Beco misterioso", 67.0, 80.82, "? Uma marcação sem nome."],
+ ["Oficina desconhecida", 76.5, 78.69, "? A localização ainda não foi identificada."],
+ ["Clube desconhecido", 67.8, 69.98, "? Um possível ponto de interesse."],
+ ["Local por descobrir", 60.0, 37.66, "? Informação insuficiente."]
 ];
 mapPoints.forEach(([name,x,y,desc])=>{const b=document.createElement('button');b.type='button';b.className='map-marker';b.style.left=x+'%';b.style.top=y+'%';b.setAttribute('aria-label',name);b.title=name;b.onclick=()=>{mapOverlay.querySelectorAll('.map-marker').forEach(e=>e.classList.remove('active'));b.classList.add('active');$('mapInfo').hidden=false;$('mapInfoTitle').textContent=name;$('mapInfoText').textContent=desc};$('mapArtFrame').appendChild(b)});
 function closeImmersiveMap(){mapOverlay.classList.remove('open');setTimeout(()=>{if(!mapOverlay.classList.contains('open'))mapOverlay.hidden=true},350);$('carMap').focus({preventScroll:true})}
